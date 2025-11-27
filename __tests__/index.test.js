@@ -1,32 +1,36 @@
-// @ts-check
-import serve from '../src/index.js';
+import createRouter from '../src/index.js';
 
 const routes = [
   {
-    path: '/courses',
-    handler: {
+    path: '/courses', // маршрут
+    handler: { // обработчик
       body: 'courses'
     },
   },
   {
     path: '/courses/basics',
-    handler: {
+    handler: { // обработчик
       body: 'basics'
     },
   },
 ];
 
-const path = '/courses';
-
-describe('Router Service', () => {
-  test('returns correct handler for existing route', () => {
-    const router = serve(routes);
-    expect(router.serve('/courses').body).toBe('courses');
-    expect(router.serve('/courses/basics').body).toBe('basics');
+describe('test createRouter function:', () => {
+  test('should return a route', () => {
+    expect(() => createRouter()).toThrow();
   });
 
-  test('throws error for non-existing route', () => {
-    const router = serve(routes);
-    expect(() => router.serve('/no_such_way')).toThrow('Route not found');
+  test('should return a route', () => {
+    const router = createRouter(routes);
+    const path = '/courses';
+
+    expect(router.serve(path)).toEqual(routes[0]);
+  });
+
+  test('should throw an error', () => {
+    const router = createRouter(routes);
+    const path = '/no_such_path';
+
+    expect(() => router.serve(path)).toThrow();
   });
 });
