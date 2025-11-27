@@ -1,0 +1,28 @@
+{
+  "name": "algorithms-project-68",
+  "version": "1.0.0",
+  "description": "...",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickpauler/algorithms-project-68.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nickpauler/algorithms-project-68/issues"
+  },
+  "homepage": "https://github.com/nickpauler/algorithms-project-68#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.11.0",
+    "globals": "^16.5.0",
+    "jest": "^30.2.0"
+  }
+}
