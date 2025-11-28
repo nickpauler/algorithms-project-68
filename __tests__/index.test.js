@@ -1,48 +1,76 @@
-
-import serve from '../src/index.js';
+import solution from '../src/index.js';
 
 const routes = [
   {
-    path: '/courses',
-    handler: { body: 'courses' },
+    method: 'POST',
+    path: 'users/long/:id',
+    handler: {
+      body: 'handler1',
+    },
+    constraints: { id: '\\d+' },
   },
   {
-    path: '/courses/:id',
-    handler: { body: 'course' },
+    path: 'users/long/:way',
+    handler: {
+      body: 'handler2',
+    },
+    constraints: { way: '[a-z]' },
+  },
+  {
+    path: 'users/long/way/:name',
+    handler: {
+      body: 'handler3',
+    },
+    constraints: { name: '[a-z]+' },
+  },
+  {
+    path: 'api/:id/:name/risc-v',
+    handler: {
+      body: 'handler4',
+    },
+    constraints: { id: '.', name: '^[a-z]+$' },
+  },
+  {
+    method: 'PUT',
+    path: 'api/:id/:uid',
+    handler: {
+      body: 'handler5',
+    },
+  },
+  {
+    path: 'api/to/Japan/',
+    handler: {
+      body: 'handler6',
+    },
+  },
+  {
+    path: '/',
+    handler: {
+      body: 'root',
+    },
   },
   {
     path: '/courses/:course_id/exercises/:id',
-    handler: { body: 'exercise' },
+    handler: {
+      body: 'exercise!',
+    },
+    constraints: { id: '\\d+', course_id: '^[a-z]+$' },
   },
 ];
 
-describe('Router Service', () => {
-  test('returns correct handler for existing static route', () => {
-    const router = serve(routes);
-    const res1 = router.serve('/courses');
-    expect(res1.handler.body).toBe('courses');
-
-    const res2 = router.serve('/courses/basics');
-    expect(res2.handler.body).toBe('course');
-  });
-
-  test('returns correct handler and params for dynamic route', () => {
-    const router = serve(routes);
-    const result = router.serve('/courses/php_trees');
-    expect(result.handler.body).toBe('course');
-    expect(result.params.id).toBe('php_trees');
-  });
-
-  test('returns correct handler and params for nested dynamic route', () => {
-    const router = serve(routes);
-    const result = router.serve('/courses/js_react/exercises/1');
-    expect(result.handler.body).toBe('exercise');
-    expect(result.params.course_id).toBe('js_react');
-    expect(result.params.id).toBe('1');
-  });
-
-  test('throws error for non-existing route', () => {
-    const router = serve(routes);
-    expect(() => router.serve('/no_such_way')).toThrow('Route not found');
+describe('makeRoutes positive', () => {
+  test.each([
+    [{ path: 'users/long/1', method: 'POST' }, { params: { id: '1' } }, 'handler1'],
+    [{ path: 'users/long/a' }, { params: { way: 'a' } }, 'handler2'],
+    [{ path: 'users/long/way/to' }, { params: { name: 'to' } }, 'handler3'],
+    [{ path: 'api/id/names/risc-v' }, { params: { id: 'id', name: 'names' } }, 'handler4'],
+    [{ path: 'api/v1/Risc/', method: 'PUT' }, { params: { id: 'v1', uid: 'Risc' } }, 'handler5'],
+    [{ path: 'api/to/Japan/' }, { params: {} }, 'handler6'],
+    [{ path: '/' }, { params: {} }, 'root'],
+    [{ path: '/courses/js/exercises/1' }, { params: { id: '1', course_id: 'js' } }, 'exercise!'],
+  ])('route - %j; expected params - %j; expected call handler - %s', async (route, expected, handler) => {
+    const result = await solution(routes, route);
+    expect(result).toMatchObject(expected);
+    expect(result.handler.body).toEqual(handler);
   });
 });
